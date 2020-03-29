@@ -2,6 +2,7 @@
 import os
 import gi
 gi.require_version("Gtk", "3.0")
+gi.require_version('AppIndicator3', '0.1')
 from gi.repository import Gtk as gtk, AppIndicator3 as appindicator
 
 def main():
@@ -14,7 +15,7 @@ def main():
 def menu():
   menu = gtk.Menu()
   command_one = gtk.MenuItem('Show progress')
-  command_one.connect('activate', note)
+  command_one.connect('activate', show_progress)
   menu.append(command_one)
   exittray = gtk.MenuItem('Exit Tray')
   exittray.connect('activate', quit)
@@ -23,8 +24,8 @@ def menu():
   return menu
 
 
-# def note(_):
-#   os.system("gedit $HOME/Documents/notes.txt")
+def show_progress(_):
+  os.system("gedit $HOME/Documents/notes.txt")
 
 def quit(_):
   gtk.main_quit()
