@@ -1,2 +1,2 @@
 src/config
-src/duplicity_USB.sh
+src/modules/duplicity_USB.sh

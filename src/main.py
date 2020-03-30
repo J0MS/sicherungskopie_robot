@@ -19,14 +19,17 @@ def menu():
   command_one = gtk.MenuItem('Start backup')
   command_one.connect('activate', start_backup)
   menu.append(command_one)
+  command_two = gtk.MenuItem('Show progress')
+  command_two.connect('activate', show_progress)
+  menu.append(command_two)
   exittray = gtk.MenuItem('Exit Tray')
   exittray.connect('activate', quit)
   menu.append(exittray)
   menu.show_all()
   return menu
 
-def start_backup():
-  subprocess.call("./duplicity_backblaze.sh")
+def start_backup(_):
+  subprocess.call("./modules/duplicity_backblaze.sh")
 
 def show_progress(_):
   os.system("gedit $HOME/Documents/notes.txt")
