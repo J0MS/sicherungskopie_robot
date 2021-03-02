@@ -5,7 +5,8 @@ description = "Automated duplicity backups"
 authors = ["Jose Manuel S <subliminal@ciencias.unam.mx>"]
 
 [tool.poetry.dependencies]
-python = "^3.6"
+python = "^3.8"
+typing = "^3.7.4"
 
 [tool.poetry.dev-dependencies]
 argconfig = "^0.0.1"
