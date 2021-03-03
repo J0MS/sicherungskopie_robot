@@ -52,4 +52,11 @@ COPY poetry.lock pyproject.toml ./
 # install runtime deps - uses $POETRY_VIRTUALENVS_IN_PROJECT internally
 RUN poetry install --no-dev --no-root
 
+COPY ./src ./src
+
+# Install Project
+RUN poetry install --no-dev
+
+ENTRYPOINT ["poetry", "run"]
+
 RUN poetry show
