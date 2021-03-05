@@ -1,3 +1,4 @@
+import sys
 import argconfig
 from enum import Enum
 from typing import Protocol, cast

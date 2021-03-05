@@ -4,11 +4,12 @@ from dotenv import load_dotenv
 from sicherungskopie_robot.config import AppCommands, parse_args
 from sicherungskopie_robot.tasks.backup import *
 from sicherungskopie_robot.tasks.restore import *
+from sicherungskopie_robot.tasks.ls import *
 
 def main():
-    # load_dotenv()
-    env_path = Path('.') / '.env'
-    load_dotenv(dotenv_path=env_path)
+    load_dotenv()
+    # env_path = Path('.') / '.env'
+    # load_dotenv(dotenv_path=env_path)
 
     args = parse_args()
 
@@ -28,6 +29,7 @@ def main():
         return
 
     elif args.command == AppCommands.LS:
-        print(args)
-        print('List')
+        # print(args)
+        # print('List')
+        ls()
 # print('From main')
