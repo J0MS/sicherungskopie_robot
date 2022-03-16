@@ -6,6 +6,24 @@ echo "Starten Backup."
 #read B2_ACCOUNT B2_KEY ENC_KEY SGN_KEY < config/secrets.config
 # Read source directories to backup
 #read CINVESTAV_DIR UNAM_DIR PROYECTS_DIR LOG_DIR < config/sources_dir.config
+EXTERNAL_HDD_DOCUMENTS='file:///run/media/icarus/HD710 PRO/backup'
+DOCUMENTS_DIR="$HOME/Documents"
+
+readarray -t sources < config/sources.config
+
+for path in "${sources[@]}"
+do
+	echo "$path"
+	folder=${path%/*}
+	dest_dir="${folder##*/}"
+	echo "$EXTERNAL_HDD_DOCUMENTS/$dest_dir"
+
+	# Preform the backup, make a full backup if it's been over 15 days
+	duplicity --no-encryption --progress  --full-if-older-than 15D  $path "$EXTERNAL_HDD_DOCUMENTS/$dest_dir" 
+
+	#Incremental backup
+	duplicity --no-encryption --progress incr $path "$EXTERNAL_HDD_DOCUMENTS/$dest_dir" 
+done
 
 #B2_BUCKET="GreenFolder"
 
@@ -19,17 +37,15 @@ echo "Starten Backup."
 #-v0 --no-print-statistics
 
 #------------------------------------------------------<Backup_Documents>-----------------------------------------------------------
-DOCUMENTS_DIR="$HOME/Documents"
-EXTERNAL_HDD_DOCUMENTS='file:///run/media/icarus/HD710 PRO/backup/Documents'
 
 #ls ${DOCUMENTS_DIR}
 #ls "${EXTERNAL_HDD_DOCUMENTS}" 
 
 # Preform the backup, make a full backup if it's been over 15 days
-duplicity --no-encryption --progress  --full-if-older-than 15D "${DOCUMENTS_DIR}" "${EXTERNAL_HDD_DOCUMENTS}" 
+#duplicity --no-encryption --progress  --full-if-older-than 15D "${DOCUMENTS_DIR}" "${EXTERNAL_HDD_DOCUMENTS}" 
 
 #Incremental backup
-duplicity --no-encryption --progress incr  "${DOCUMENTS_DIR}" "${EXTERNAL_HDD_DOCUMENTS}"
+#duplicity --no-encryption --progress incr  "${DOCUMENTS_DIR}" "${EXTERNAL_HDD_DOCUMENTS}"
 
 #Remove files older than 90 days
 #duplicity --progress  remove-older-than 30D --force b2://${B2_ACCOUNT}:${B2_KEY}@${B2_BUCKET}/${DEST_DIR1}
