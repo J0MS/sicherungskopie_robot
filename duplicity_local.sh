@@ -2,54 +2,56 @@
 export DISPLAY=:0
 echo "Starten Backup."
 
-# Backblaze B2 configuration variables
-#read B2_ACCOUNT B2_KEY ENC_KEY SGN_KEY < config/secrets.config
-# Read source directories to backup
-#read CINVESTAV_DIR UNAM_DIR PROYECTS_DIR LOG_DIR < config/sources_dir.config
-#EXTERNAL_HDD_DOCUMENTS='file:///run/media/icarus/HD710 PRO/backup'
-#DOCUMENTS_DIR="$HOME/Documents"
+
+if [ $# -lt 1 ]
+then
+	echo "Usage: $0 -c=config file arg2"
+	exit
+fi
 
 
-DOCUMENTS_DIR="$HOME/Documents"
+for i in "$@"; do
+	case $i in 
+		-c=*|--configuration=*)
+		CONFIGURATION="${i#*=}"
+		shift
+		;;
+		-*|--*)
+	          echo "Unknown option $i"
+		  exit 1
+		  ;;
+	        *)
+		  ;;
+	esac
+done
 
+#echo "$CONFIGURATION"
 
-
-readarray -t sources < config/sources.config
+#readarray -t sources < config/sources.config
+readarray -t sources < "$CONFIGURATION"
 
 
 DESTINATION=${sources[0]}
+LOG_DIR="log/"
 
-if [ ! -d "$DESTINATION" ] 
-then
-	echo "Directory /path/to/dir DOES NOT exists." 
-	exit 9999 # die with error code 9999
-else
-	echo "Setup ready"
-fi
 
 for path in "${sources[@]:1:2}"
-do
-	folder=${path%/*}
-	dest_dir="${folder##*/}"
-	echo "$DESTINATION/$dest_dir"
+	do
+		folder=${path%/*}
+		dest_dir="${folder##*/}"
+		echo "Synchronizing $path to $DESTINATION/$dest_dir"
 
-	# Preform the backup, make a full backup if it's been over 15 days
-#	duplicity --no-encryption --progress  --full-if-older-than 15D  $path "$DESTINATION/$dest_dir" 
+		# Preform the backup, make a full backup if it's been over 15 days
+		duplicity --no-encryption --progress  --full-if-older-than 15D  $path "$DESTINATION/$dest_dir" 
 
-	#Incremental backup
-#	duplicity --no-encryption --progress incr $path "$DESTINATION/$dest_dir" 
-done
+		#Incremental backup
+		duplicity --no-encryption --progress incr $path "$DESTINATION/$dest_dir" 
 
-#B2_BUCKET="GreenFolder"
+		duplicity --progress list-current-files "$DESTINATION/$dest_dir" >> "$LOG_DIR/local_backup.log"
 
-
-# GPG key (last 8 characters)
-
-#export PASSPHRASE=(`kdialog --title "Pin entry" --password "Please enter the private key:"`)
-#export SIGN_PASSPHRASE=$PASSPHRASE
+	done
 
 
-#-v0 --no-print-statistics
 
 #------------------------------------------------------<Backup_Documents>-----------------------------------------------------------
 
