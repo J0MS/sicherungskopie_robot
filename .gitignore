@@ -1,4 +1,5 @@
 config/
+log/
 src/config
 src/modules/duplicity_USB.sh
 /src/sicherungskopie_robot.egg-info/
