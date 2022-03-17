@@ -19,7 +19,7 @@ readarray -t sources < config/sources.config
 
 DESTINATION=${sources[0]}
 
-if [ ! -d "${DESTINATION}" ] 
+if [ ! -d "$DESTINATION" ] 
 then
 	echo "Directory /path/to/dir DOES NOT exists." 
 	exit 9999 # die with error code 9999
