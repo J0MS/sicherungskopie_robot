@@ -25,9 +25,7 @@ for i in "$@"; do
 	esac
 done
 
-#echo "$CONFIGURATION"
 
-#readarray -t sources < config/sources.config
 readarray -t sources < "$CONFIGURATION"
 
 
@@ -53,22 +51,11 @@ for path in "${sources[@]:1:2}"
 
 
 
-#------------------------------------------------------<Backup_Documents>-----------------------------------------------------------
 
-#ls ${DOCUMENTS_DIR}
-#ls "${EXTERNAL_HDD_DOCUMENTS}" 
-
-# Preform the backup, make a full backup if it's been over 15 days
-#duplicity --no-encryption --progress  --full-if-older-than 15D "${DOCUMENTS_DIR}" "${EXTERNAL_HDD_DOCUMENTS}" 
-
-#Incremental backup
-#duplicity --no-encryption --progress incr  "${DOCUMENTS_DIR}" "${EXTERNAL_HDD_DOCUMENTS}"
 
 #Remove files older than 90 days
 #duplicity --progress  remove-older-than 30D --force b2://${B2_ACCOUNT}:${B2_KEY}@${B2_BUCKET}/${DEST_DIR1}
 
-#duplicity --progress list-current-files b2://${B2_ACCOUNT}:${B2_KEY}@${B2_BUCKET}/${DEST_DIR1}>> "$LOG_DIR/Cinvestav_backup.log"
-#------------------------------------------------------</Backup_Cinvestav>-----------------------------------------------------------
 
 
 
