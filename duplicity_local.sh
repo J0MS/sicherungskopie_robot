@@ -45,6 +45,10 @@ for path in "${sources[@]:1:2}"
 		#Incremental backup
 		duplicity --no-encryption --progress incr $path "$DESTINATION/$dest_dir" 
 
+		#Remove files older than 90 days
+		#duplicity --progress  remove-older-than 30D --force b2://${B2_ACCOUNT}:${B2_KEY}@${B2_BUCKET}/${DEST_DIR1}
+
+		#List of current files in backup
 		duplicity --progress list-current-files "$DESTINATION/$dest_dir" >> "$LOG_DIR/local_backup.log"
 
 	done
@@ -53,8 +57,6 @@ for path in "${sources[@]:1:2}"
 
 
 
-#Remove files older than 90 days
-#duplicity --progress  remove-older-than 30D --force b2://${B2_ACCOUNT}:${B2_KEY}@${B2_BUCKET}/${DEST_DIR1}
 
 
 
