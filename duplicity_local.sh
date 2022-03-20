@@ -5,19 +5,19 @@ echo "Starten Backup."
 
 if [ $# -lt 1 ]
 then
-	echo "Usage: $0 -c=config file arg2"
+	echo "Usage: $0 -config=config file arg2"
 	exit
 fi
 
 
 for i in "$@"; do
 	case $i in 
-		-c=*|--configuration=*)
-		CONFIGURATION="${i#*=}"
+		-config=*|--configuration=*)
+		CONFIGURATION_FILE="${i#*=}"
 		shift
 		;;
 		-*|--*)
-	          echo "Unknown option $i"
+	          echo "Unknown parameter $i"
 		  exit 1
 		  ;;
 	        *)
@@ -26,18 +26,21 @@ for i in "$@"; do
 done
 
 
-readarray -t sources < "$CONFIGURATION"
+readarray -t sources < "$CONFIGURATION_FILE"
 
 
 DESTINATION=${sources[0]}
 LOG_DIR="log/"
+LOG_DATE=$(date '+%Y-%m-%d')
+LOG_FILE="local_backup_$LOG_DATE.log"
 
 
 for path in "${sources[@]:1:2}"
 	do
 		folder=${path%/*}
 		dest_dir="${folder##*/}"
-		echo "Synchronizing $path to $DESTINATION/$dest_dir"
+		echo "Synchronisieren  $path zu $DESTINATION/$dest_dir"
+		echo $LOG_FILE
 
 		# Preform the backup, make a full backup if it's been over 15 days
 		duplicity --no-encryption --progress  --full-if-older-than 15D  $path "$DESTINATION/$dest_dir" 
@@ -49,7 +52,7 @@ for path in "${sources[@]:1:2}"
 		#duplicity --progress  remove-older-than 30D --force b2://${B2_ACCOUNT}:${B2_KEY}@${B2_BUCKET}/${DEST_DIR1}
 
 		#List of current files in backup
-		duplicity --progress list-current-files "$DESTINATION/$dest_dir" >> "$LOG_DIR/local_backup.log"
+		duplicity --progress list-current-files "$DESTINATION/$dest_dir" >> "$LOG_DIR/$LOG_FILE"
 
 	done
 
