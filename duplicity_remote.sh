@@ -30,7 +30,7 @@ readarray -t sources < "$CONFIGURATION_FILE"
 
 
 export PASSPHRASE=(`kdialog --title "Pin entry" --password "Please enter the private key:"`)
-export SIGN_PASSPHRASE=$PASSPHRASE
+#export SIGN_PASSPHRASE=$PASSPHRASE
 
 GPG_KEY=${sources[0]}
 B2_KEY_ID=${sources[1]}
@@ -44,16 +44,14 @@ for path in "${sources[@]:3}"
 	do
 		folder=${path%/*}
 		dest_dir="${folder##*/}"
-		dest_bucket=${path##*:}
-		echo "Synchronisieren  $folder zu $dest_bucket (B2 bucket)"
-		echo $LOG_FILE
-		echo ${path##*:}
+		DEST_BUCKET=${path##*:}
+		echo "Synchronisieren  $folder zu $DEST_BUCKET (B2 bucket)"
 		echo $folder
-		echo $path
+		echo $DEST_BUCKET
 
 		# Preform the backup, make a full backup if it's been over 15 days
 #		duplicity --no-encryption --progress  --full-if-older-than 15D  $path "$DESTINATION/$dest_dir" 
-	#	duplicity --progress --sign-key $SGN_KEY --encrypt-key $ENC_KEY --full-if-older-than 15D $path b2://${B2_ACCOUNT}:${B2_KEY}@${B2_BUCKET}/"$DESTINATION/$dest_dir"
+		duplicity --progress --sign-key $GPG_KEY --encrypt-key $GPG_KEY --full-if-older-than 15D $path b2://${B2_KEY_ID}:${B2_APP_KEY}@${B2_BUCKET}
 
 		#Incremental backup
 #		duplicity --no-encryption --progress incr $path "$DESTINATION/$dest_dir" 
@@ -69,6 +67,9 @@ for path in "${sources[@]:3}"
 
 
 
+unset GPG_KEY
+unset B2_KEY_ID
+unset B2_APP_KEY
 
 
 
