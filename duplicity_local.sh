@@ -30,7 +30,7 @@ readarray -t sources < "$CONFIGURATION_FILE"
 
 
 DESTINATION=${sources[0]}
-LOG_DIR="log/"
+LOG_DIR="log/local/"
 LOG_DATE=$(date '+%Y-%m-%d')
 LOG_FILE="local_backup_$LOG_DATE.log"
 
