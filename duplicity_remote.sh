@@ -30,7 +30,7 @@ readarray -t sources < "$CONFIGURATION_FILE"
 
 
 export PASSPHRASE=(`kdialog --title "Pin entry" --password "Please enter the private key:"`)
-#export SIGN_PASSPHRASE=$PASSPHRASE
+export SIGN_PASSPHRASE=$PASSPHRASE
 
 GPG_KEY=${sources[0]}
 B2_KEY_ID=${sources[1]}
@@ -46,10 +46,10 @@ for path in "${sources[@]:3}"
 		DEST_DIR="${folder##*/}"
 		DEST_BUCKET=${path##*:}
 		echo "Synchronisieren  $folder zu $DEST_BUCKET (B2 bucket)"
-		echo $path
-		echo $folder
-		echo $DEST_BUCKET
-		echo $DEST_DIR
+#		echo $path
+#		echo $folder
+#		echo $DEST_BUCKET
+#		echo $DEST_DIR
 
 		# Preform the backup, make a full backup if it's been over 15 days
 		duplicity --progress --sign-key $GPG_KEY --encrypt-key $GPG_KEY --full-if-older-than 15D $folder b2://${B2_KEY_ID}:${B2_APP_KEY}@${DEST_BUCKET}/${DEST_DIR}
@@ -70,6 +70,8 @@ for path in "${sources[@]:3}"
 unset GPG_KEY
 unset B2_KEY_ID
 unset B2_APP_KEY
+unset PASSPHRASE
+unset SIGN_PASSPHRASE
 
 
 
