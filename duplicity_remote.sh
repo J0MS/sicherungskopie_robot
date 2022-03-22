@@ -46,16 +46,12 @@ for path in "${sources[@]:3}"
 		DEST_DIR="${folder##*/}"
 		DEST_BUCKET=${path##*:}
 		echo "Synchronisieren  $folder zu $DEST_BUCKET (B2 bucket)"
-#		echo $path
-#		echo $folder
-#		echo $DEST_BUCKET
-#		echo $DEST_DIR
 
 		# Preform the backup, make a full backup if it's been over 15 days
-		duplicity --progress --sign-key $GPG_KEY --encrypt-key $GPG_KEY --full-if-older-than 15D $folder b2://${B2_KEY_ID}:${B2_APP_KEY}@${DEST_BUCKET}/${DEST_DIR}
+		duplicity --progress --sign-key $GPG_KEY --encrypt-key $GPG_KEY --full-if-older-than 15D --exclude **\*.git $folder b2://${B2_KEY_ID}:${B2_APP_KEY}@${DEST_BUCKET}/${DEST_DIR}
 
 		#Incremental backup
-		duplicity --progress incr --sign-key $GPG_KEY --encrypt-key $GPG_KEY $folder b2://${B2_KEY_ID}:${B2_APP_KEY}@${DEST_BUCKET}/${DEST_DIR}
+		duplicity --progress incr --sign-key $GPG_KEY --encrypt-key $GPG_KEY --exclude **\*.git  $folder b2://${B2_KEY_ID}:${B2_APP_KEY}@${DEST_BUCKET}/${DEST_DIR}
 
 		#Remove files older than 90 days
 		#duplicity --progress --sign-key $SGN_KEY --encrypt-key $ENC_KEY remove-older-than 30D --force b2://${B2_KEY_ID}:${B2_APP_KEY}@${DEST_BUCKET}/${DEST_DIR}
